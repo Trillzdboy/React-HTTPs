@@ -20,8 +20,6 @@ function App() {
 
       const data = await response.json();
 
-      
-
       const transformedMovies = data.results.map((movieData) => {
         return {
           title: movieData.title,
@@ -37,16 +35,23 @@ function App() {
     setIsLoading(false);
   };
 
+  let content = <p>Loading...</p>;
+
+  if (!isLoading && movies.length > 0) {
+    content = <MoviesList movies={movies} />;
+  } else if (!isLoading && error) {
+    content = <p>{error}</p>;
+  } else if (!isLoading && movies.length === 0) {
+    content = <p>No movies found.</p>;
+  }
+
   return (
     <React.Fragment>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>
-        {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
-        {!isLoading && movies.length === 0 && !error && <h1>No Movies</h1>}
-        {isLoading && <h1>Loading...</h1>}
-        {!isLoading && error && <h1>{error}</h1>}
+        {content}
       </section>
     </React.Fragment>
   );
